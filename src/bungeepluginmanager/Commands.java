@@ -42,7 +42,7 @@ public class Commands extends Command implements TabExecutor {
 		}
 		switch (toLowerCase(args[0])) {
 			case "list": {
-				sender.sendMessage(textWithColor(getPluginNamesStream().collect(Collectors.joining(", ")), ChatColor.GREEN));
+				sender.sendMessage(textWithColor(getPluginListStream().collect(Collectors.joining(ChatColor.WHITE + ", " + ChatColor.GREEN)), ChatColor.GREEN));
 				return;
 			}
 			case "unload": {
@@ -154,6 +154,9 @@ public class Commands extends Command implements TabExecutor {
 		return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(plugin -> plugin.getDescription().getName());
 	}
 
+	private Stream<String> getPluginListStream() {
+		return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(plugin -> String.format("%s [%s]", plugin.getDescription().getName(), plugin.getDescription().getVersion()));
+	}
 
 	private static TextComponent textWithColor(String message, ChatColor color) {
 		TextComponent text = new TextComponent(message);
