@@ -1,4 +1,4 @@
 name: BungeePluginManager
 main: bungeepluginmanager.BungeePluginManager
-version: 2.1
+version: ${pluginVersion}
 author: _Shevchik_

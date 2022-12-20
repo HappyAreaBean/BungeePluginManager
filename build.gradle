@@ -67,6 +67,9 @@ shadowJar {
 	setArchivesBaseName(jar.getArchiveBaseName().get())
 }
 
+tasks.processResources {
+	expand("pluginVersion": project.version)
+}
 
 tasks.register('copyFinalJarToTarget') {
 	doLast {
