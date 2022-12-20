@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.md_5.bungee.protocol.packet.Chat;
 import org.yaml.snakeyaml.Yaml;
 
 import net.md_5.bungee.api.ChatColor;
@@ -41,6 +42,28 @@ public class Commands extends Command implements TabExecutor {
 			return;
 		}
 		switch (toLowerCase(args[0])) {
+			case "info": {
+				if (args.length < 2) {
+					sender.sendMessage(textWithColor("Not enough args", ChatColor.RED));
+					return;
+				}
+
+				Plugin plugin = findPlugin(args[1]);
+				if (plugin == null) {
+					sender.sendMessage(textWithColor("Plugin not found", ChatColor.RED));
+					return;
+				}
+
+				PluginDescription desc = plugin.getDescription();
+				sender.sendMessage(textWithColor("Name: ", ChatColor.GREEN), textWithColor(desc.getName(), ChatColor.WHITE));
+				sender.sendMessage(textWithColor("Description: ", ChatColor.GREEN), textWithColor(desc.getDescription() == null ? "No description provided" : desc.getDescription(), ChatColor.WHITE));
+				sender.sendMessage(textWithColor("Version: ", ChatColor.GREEN), textWithColor(desc.getVersion(), ChatColor.WHITE));
+				sender.sendMessage(textWithColor("Author: ", ChatColor.GREEN), textWithColor(desc.getAuthor(), ChatColor.WHITE));
+				sender.sendMessage(textWithColor("Main class: ", ChatColor.GREEN), textWithColor(desc.getMain(), ChatColor.WHITE));
+				sender.sendMessage(textWithColor("Depends: ", ChatColor.GREEN), textWithColor(desc.getDepends().isEmpty() ? "None" : String.join(", ", desc.getDepends()), ChatColor.WHITE));
+				sender.sendMessage(textWithColor("Soft Depends: ", ChatColor.GREEN), textWithColor(desc.getSoftDepends().isEmpty() ? "None" : String.join(", ", desc.getSoftDepends()), ChatColor.WHITE));
+				return;
+			}
 			case "list": {
 				sender.sendMessage(textWithColor(getPluginListStream().collect(Collectors.joining(ChatColor.WHITE + ", " + ChatColor.GREEN)), ChatColor.GREEN));
 				return;
@@ -164,7 +187,7 @@ public class Commands extends Command implements TabExecutor {
 		return text;
 	}
 
-	private final List<String> subCommands = Arrays.asList("list", "load", "unload", "reload");
+	private final List<String> subCommands = Arrays.asList("list", "load", "unload", "reload", "info");
 
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
@@ -172,7 +195,7 @@ public class Commands extends Command implements TabExecutor {
 		if (args.length == 1) {
 			return subCommands.stream().filter(cmd -> toLowerCase(cmd).startsWith(arg0low)).collect(Collectors.toList());
 		} else {
-			if ((args.length == 2) && subCommands.contains(arg0low) && (arg0low.equals("unload") || (arg0low.equals("reload")))) {
+			if ((args.length == 2) && subCommands.contains(arg0low) && (arg0low.equals("unload") || (arg0low.equals("reload") || (arg0low.equals("info"))))) {
 				return getPluginNamesStream().filter(cmd -> toLowerCase(cmd).startsWith(toLowerCase(args[1]))).collect(Collectors.toList());
 			}
 			return Collections.emptyList();
