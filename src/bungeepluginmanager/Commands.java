@@ -1,5 +1,15 @@
 package bungeepluginmanager;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginDescription;
+import net.md_5.bungee.api.plugin.TabExecutor;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -12,18 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import net.md_5.bungee.protocol.packet.Chat;
-import org.yaml.snakeyaml.Yaml;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.plugin.PluginDescription;
-import net.md_5.bungee.api.plugin.TabExecutor;
 
 //TODO: split to subcommands
 public class Commands extends Command implements TabExecutor {
@@ -84,7 +82,7 @@ public class Commands extends Command implements TabExecutor {
 					PluginUtils.unloadPlugin(plugin);
 					sender.sendMessage(textWithColor("Plugin unloaded", ChatColor.YELLOW));
 				} catch (Throwable t) {
-					sender.sendMessage(textWithColor("Error occured while unloading plugin, see console for more details", ChatColor.RED));
+					sender.sendMessage(textWithColor("Error occurred while unloading plugin, see console for more details", ChatColor.RED));
 					logger.log(Level.WARNING, "Failed to unload plugin " + plugin.getDescription().getName(), t);
 				}
 				return;
@@ -133,7 +131,7 @@ public class Commands extends Command implements TabExecutor {
 					PluginUtils.loadPlugin(pluginFile);
 					sender.sendMessage(textWithColor("Plugin reloaded", ChatColor.YELLOW));
 				} catch (Throwable t) {
-					sender.sendMessage(textWithColor("Error occured while reloading plugin, see console for more details", ChatColor.RED));
+					sender.sendMessage(textWithColor("Error occurred while reloading plugin, see console for more details", ChatColor.RED));
 					logger.log(Level.WARNING, "Failed to reload plugin " + "(" + plugin.getDescription().getName() + "," + pluginFile.getName() + ")", t);
 				}
 			}
