@@ -63,7 +63,8 @@ public class Commands extends Command implements TabExecutor {
 				return;
 			}
 			case "list": {
-				sender.sendMessage(textWithColor(getPluginListStream().collect(Collectors.joining(ChatColor.WHITE + ", " + ChatColor.GREEN)), ChatColor.GREEN));
+				sender.sendMessage(getPluginListStream().collect(ChatComponentJoiner.joining(new TextComponent(", "),
+					new TextComponent(String.format("Plugins (%s): ", ProxyServer.getInstance().getPluginManager().getPlugins().size())), null)));
 				return;
 			}
 			case "unload": {
@@ -175,8 +176,15 @@ public class Commands extends Command implements TabExecutor {
 		return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(plugin -> plugin.getDescription().getName());
 	}
 
-	private Stream<String> getPluginListStream() {
-		return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(plugin -> String.format("%s [%s]", plugin.getDescription().getName(), plugin.getDescription().getVersion()));
+	private Stream<TextComponent> getPluginListStream() {
+		return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(plugin -> {
+			TextComponent name = new TextComponent(String.format("%s ", plugin.getDescription().getName()));
+			name.setColor(ChatColor.GREEN);
+			TextComponent version = new TextComponent(String.format("[%s]", plugin.getDescription().getVersion()));
+			version.setColor(ChatColor.GRAY);
+			name.addExtra(version);
+			return name;
+		});
 	}
 
 	private static TextComponent textWithColor(String message, ChatColor color) {
